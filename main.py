@@ -1,16 +1,9 @@
-import requests
-import urllib.request
-import time
 from bs4 import BeautifulSoup
+import requests
 import subprocess
 
-url = 'https://ind.nl/en/Pages/Making-an-appointment-online.aspx'
 
-response = requests.get(url)
-
-if response.status_code == 200:
-    print("ok")
-    # subprocess.Popen(["/usr/bin/notify-send", "-u", "critical", "IND site online"])
+def process_website(response):
     soup = BeautifulSoup(response.text, "html.parser")
 
     st = soup.find_all("strong")
@@ -21,6 +14,14 @@ if response.status_code == 200:
         subprocess.Popen(["/usr/bin/notify-send", "-u", "critical", notify_str])
     else:
         subprocess.Popen(["/usr/bin/notify-send", "-u", "critical", "No change to the IND message."])
+
+
+url = 'https://ind.nl/en/Pages/Making-an-appointment-online.aspx'
+
+response = requests.get(url)
+
+if response.status_code == 200:
+    process_website(response)
 else:
     subprocess.Popen(["/usr/bin/notify-send", "-u", "critical", "IND site offline"])
 
